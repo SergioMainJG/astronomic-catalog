@@ -1,5 +1,10 @@
 .idea
-.idea/*
+.idea/**/*
+.idea/workspace.xml
+.idea/astronomic-catalog.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/.gitignore
 .vscode
 
 .DS_Store
@@ -23,3 +28,5 @@ database/backups/*
 !database/backups/.gitkeep
 
 infra/docker/data/
+
+mysql_data/
