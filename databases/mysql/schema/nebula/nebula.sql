@@ -1,5 +1,5 @@
-CREATE TABLE `Nebula` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
-  `neighborhood_id` int
+CREATE TABLE `Nebula`
+(
+    `id`              INT PRIMARY KEY,
+    `neighborhood_id` INT NOT NULL
 );

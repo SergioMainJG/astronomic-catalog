@@ -1,7 +1,8 @@
-CREATE TABLE `BlackHole` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
-  `mass_solar` float,
-  `galaxy_id` int,
-  `system_id` int
+CREATE TABLE `BlackHole`
+(
+    `id`         INT PRIMARY KEY,
+    `mass_solar` DECIMAL(10, 4) NOT NULL,
+    `galaxy_id`  INT            NOT NULL,
+    `system_id`  INT            NOT NULL,
+    CONSTRAINT `check_black_hole_mass_solar` CHECK ( `mass_solar` > 0.0000)
 );

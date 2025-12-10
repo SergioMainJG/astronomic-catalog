@@ -1,7 +1,7 @@
-CREATE TABLE `Comet` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
-  `type_id` int,
-  `system_id` int,
-  `galaxy_id` int
+CREATE TABLE `Comet`
+(
+    `id`        INT PRIMARY KEY,
+    `type_id`   INT         NOT NULL,
+    `system_id` INT         NOT NULL,
+    `galaxy_id` INT         NOT NULL
 );

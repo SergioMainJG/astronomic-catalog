@@ -1,5 +1,5 @@
-CREATE TABLE `StarCluster` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
-  `galaxy_id` int
+CREATE TABLE `StarCluster`
+(
+    `id`        INT PRIMARY KEY,
+    `galaxy_id` INT
 );

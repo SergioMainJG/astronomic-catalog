@@ -1,6 +1,7 @@
-CREATE TABLE `Galaxy` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
-  `galaxy_type_id` int,
-  `distance_mly` float
+CREATE TABLE `Galaxy`
+(
+    `id`             INT PRIMARY KEY,
+    `galaxy_type_id` INT NOT NULL,
+    `distance_mly`   DECIMAL(10, 4),
+    CONSTRAINT `check_galaxy_distance_mly` CHECK (`distance_mly` > 0.0000)
 );

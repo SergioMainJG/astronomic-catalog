@@ -1,6 +1,6 @@
-CREATE TABLE `Galaxy` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
-  `galaxy_type_id` int,
-  `distance_mly` float
+CREATE TABLE `GalaxyType`
+(
+    `id`   INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    CONSTRAINT `check_galaxy_type_name` CHECK ( `name` REGEXP '^[A-Za-z0-9 .+'',-]+$')
 );
