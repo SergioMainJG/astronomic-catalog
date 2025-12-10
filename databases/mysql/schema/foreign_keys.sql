@@ -22,6 +22,9 @@ ALTER TABLE `BlackHole`
 ALTER TABLE `Nebula`
     ADD FOREIGN KEY (`id`) REFERENCES `CelestialObject` (`id`) ON DELETE CASCADE;
 
+ALTER TABLE `StarCluster`
+    ADD FOREIGN KEY (`id`) REFERENCES `CelestialObject` (`id`) ON DELETE CASCADE;
+
 ALTER TABLE `Galaxy`
     ADD FOREIGN KEY (`galaxy_type_id`) REFERENCES `GalaxyType` (`id`);
 
