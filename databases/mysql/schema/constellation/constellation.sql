@@ -1,5 +1,6 @@
-CREATE TABLE `Constellation` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
-  `abbreviation` varchar(255)
+CREATE TABLE `Constellation`
+(
+    `id`           INT PRIMARY KEY AUTO_INCREMENT,
+    `abbreviation` VARCHAR(30) NOT NULL,
+    CONSTRAINT `check_constellation_abbreviation` CHECK ( `abbreviation` REGEXP '^[A-Za-z0-9 .+'',-]+$' )
 );
