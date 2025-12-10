@@ -5,6 +5,8 @@
 .idea/modules.xml
 .idea/vcs.xml
 .idea/.gitignore
+.idea/vcs.xml
+.idea/modules.xml
 .vscode
 
 .DS_Store
@@ -30,3 +32,4 @@ database/backups/*
 infra/docker/data/
 
 mysql_data/
+queries/
