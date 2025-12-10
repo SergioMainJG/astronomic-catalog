@@ -2,7 +2,7 @@ CREATE TABLE `Orbit`
 (
     `id`                  INT PRIMARY KEY AUTO_INCREMENT,
     `celestial_object_id` INT            NOT NULL,
-    `primary_body_id`     INT,
+    `primary_body_id`     INT            NOT NULL,
     `semi_major_axis`     DECIMAL(10, 4) NOT NULL,
     `eccentricity`        DECIMAL(10, 4) NOT NULL,
     `orbital_period`      DECIMAL(10, 4) NOT NULL,
