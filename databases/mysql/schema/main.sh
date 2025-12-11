@@ -2,7 +2,7 @@
 echo "Starting manual loading of schemas"
 
 load_sql() {
-    echo "Cargando: $1"
+    echo "Loading - Cargando: $1"
     mysql -u root -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" < "$1"
 }
 
@@ -33,10 +33,20 @@ load_sql "/docker-entrypoint-initdb.d/ddl/orbit/orbit.sql"
 load_sql "/docker-entrypoint-initdb.d/ddl/observation/observation.sql"
 
 load_sql "/docker-entrypoint-initdb.d/ddl/foreign_keys.sql"
-load_sql "/docker-entrypoint-initdb.d/users/users.sql"
-echo "Carga completa de DDL"
 
-echo "Sembrando datos iniciales..."
+echo "Loading triggers - Carga de triggers"
+load_sql "/docker-entrypoint-initdb.d/triggers/validate-created_at.celestial-object.sql"
+load_sql "/docker-entrypoint-initdb.d/triggers/validate-updated_at.natural-satellite.sql"
+load_sql "/docker-entrypoint-initdb.d/triggers/validate-mass_planet.natural-satellite.sql"
+load_sql "/docker-entrypoint-initdb.d/triggers/validate-eccentricity.celestial-object.sql"
+
+echo "Loading users - Carga de usuarios"
+load_sql "/docker-entrypoint-initdb.d/users/users.sql"
+
+echo "Loading ddl - Carga completa de DDL"
+
+echo "Seed startup - data Sembrando datos iniciales..."
 load_sql "/docker-entrypoint-initdb.d/seed/startup.sql"
 
-echo "Carga completa de la seed"
+echo "Loading completed of seed - Carga completa de la seed"
+echo "Database ready - Base de datos lista"
