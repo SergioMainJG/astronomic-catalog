@@ -14,3 +14,16 @@ services:
       - ./mysql_data:/var/lib/mysql 
       - ../../databases/mysql/schema:/docker-entrypoint-initdb.d
       - ./mysql/my.cnf:/etc/mysql/conf.d/my.ini
+
+  astronomic_mongodb:
+    container_name: astronomic_mongodb
+    image: mongo:latest
+    restart: always
+    ports:
+      - 3307:27017
+    environment:
+      MONGO_INITDB_DATABASE: astronomic-catalog-mongo
+      MONGO_INITDB_ROOT_USERNAME: sergio
+      MONGO_INITDB_ROOT_PASSWORD: hola
+    volumes:
+      - ./mongo_data:/data/db
