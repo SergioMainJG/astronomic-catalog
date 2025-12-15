@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, TableInheritance } from 'typeorm';
 
 @Entity('CelestialObject')
-@TableInheritance({ column: { type: 'varchar', name: 'type', nullable: true } }) // Using Single Table Inheritance or Concrete Table Inheritance? 
+// @TableInheritance({ column: { type: 'varchar', name: 'type', nullable: true } }) // Using Single Table Inheritance or Concrete Table Inheritance? 
 // Wait, the schema uses JOIN strategy (One-to-One with base table). 
 // Accessing the schema again...
 // The schema has `CelestialObject` table and then `BlackHole` table with `id` as FK to `CelestialObject(id)`.

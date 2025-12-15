@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { StarCluster } from './entities/star-cluster.entity';
@@ -18,6 +18,13 @@ export class StarClustersService {
     await queryRunner.startTransaction();
 
     try {
+      const existing = await this.dataSource.manager.findOne(CelestialObject, {
+        where: { globalName: createStarClusterDto.globalName },
+      });
+      if (existing) {
+        throw new ConflictException('Celestial object with this name already exists');
+      }
+
       const celestialObject = new CelestialObject();
       celestialObject.globalName = createStarClusterDto.globalName;
       celestialObject.description = createStarClusterDto.description;

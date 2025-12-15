@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { BlackHole } from './entities/blackhole.entity';
@@ -21,6 +21,13 @@ export class BlackholesService {
     await queryRunner.startTransaction();
 
     try {
+      const existing = await this.dataSource.manager.findOne(CelestialObject, {
+        where: { globalName: createBlackHoleDto.globalName },
+      });
+      if (existing) {
+        throw new ConflictException('Celestial object with this name already exists');
+      }
+
       const celestialObject = new CelestialObject();
       celestialObject.globalName = createBlackHoleDto.globalName;
       celestialObject.description = createBlackHoleDto.description;

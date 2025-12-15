@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StarSystem } from './entities/star-system.entity';
@@ -10,7 +10,11 @@ export class StellarSystemsService {
     private starSystemRepository: Repository<StarSystem>,
   ) { }
 
-  create(createStarSystemDto: any): Promise<StarSystem> {
+  async create(createStarSystemDto: any): Promise<StarSystem> {
+    const existing = await this.starSystemRepository.findOne({ where: { name: createStarSystemDto.name } });
+    if (existing) {
+      throw new ConflictException('Star System with this name already exists');
+    }
     const starSystem = this.starSystemRepository.create(createStarSystemDto) as unknown as StarSystem;
     return this.starSystemRepository.save(starSystem);
   }
