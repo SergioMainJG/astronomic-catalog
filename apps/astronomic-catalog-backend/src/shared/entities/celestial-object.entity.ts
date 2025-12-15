@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, TableInheritance } from 'typeorm';
 
 @Entity('CelestialObject')
-@Entity('CelestialObject')
 export class CelestialObject {
   @PrimaryGeneratedColumn()
   id: number;
