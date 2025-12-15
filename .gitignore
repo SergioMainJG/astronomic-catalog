@@ -14,8 +14,8 @@ Thumbs.db
 
 .env
 *.env
-infra/docker/.env
-
+infrastructure/docker/mongo_data
+infrastructure/docker/mysql_data
 node_modules/
 dist/
 .output/
