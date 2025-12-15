@@ -5,7 +5,7 @@ CREATE TRIGGER trigger_celestial_object_before_update
     ON CelestialObject
     FOR EACH ROW
 BEGIN
-    IF NEW.`updated_at` > CURRENT_TIMESTAMP THEN
+    IF NEW.`updated_at` > (CURRENT_TIMESTAMP + INTERVAL 1 MINUTE ) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'updated_at can not be over the present time';
     END IF;
