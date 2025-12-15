@@ -17,6 +17,7 @@ import { NaturalSatellitesModule } from './natural-satellites/natural-satellites
 import { AsteroidsModule } from './asteroids/asteroids.module';
 import { CometsModule } from './comets/comets.module';
 import { StarClustersModule } from './star-clusters/star-clusters.module';
+import { ObservationsModule } from './observations/observations.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { StarClustersModule } from './star-clusters/star-clusters.module';
     AsteroidsModule,
     CometsModule,
     StarClustersModule,
+    ObservationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

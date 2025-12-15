@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
 import { NebulasService } from './nebulas.service';
 import { CreateNebulaDto } from './dto/create-nebula.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -28,6 +28,22 @@ export class NebulasController {
   @ApiResponse({ status: 200, description: 'Return the nebula.' })
   @ApiResponse({ status: 404, description: 'Nebula not found.' })
   findOne(@Param('id') id: string) {
-    return this.nebulasService.findOne(+id);
+    return this.nebulasService.findOne(id);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update a nebula by ID' })
+  @ApiResponse({ status: 200, description: 'The nebula has been successfully updated.' })
+  @ApiResponse({ status: 404, description: 'Nebula not found.' })
+  update(@Param('id') id: string, @Body() updateNebulaDto: any) {
+    return this.nebulasService.update(id, updateNebulaDto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete a nebula by ID' })
+  @ApiResponse({ status: 200, description: 'The nebula has been successfully deleted.' })
+  @ApiResponse({ status: 404, description: 'Nebula not found.' })
+  remove(@Param('id') id: string) {
+    return this.nebulasService.remove(id);
   }
 }

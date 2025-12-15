@@ -1,61 +1,61 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
-import { Nebula } from './entities/nebula.entity';
-import { CelestialObject } from '../shared/entities/celestial-object.entity';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, isValidObjectId } from 'mongoose';
+import { Nebula } from './schemas/nebula.schema';
+import { CreateNebulaDto } from './dto/create-nebula.dto';
 
 @Injectable()
 export class NebulasService {
   constructor(
-    @InjectRepository(Nebula)
-    private nebulaRepository: Repository<Nebula>,
-    private dataSource: DataSource,
+    @InjectModel(Nebula.name) private nebulaModel: Model<Nebula>,
   ) { }
 
-  async create(createNebulaDto: any): Promise<Nebula> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      const existing = await this.dataSource.manager.findOne(CelestialObject, {
-        where: { globalName: createNebulaDto.globalName },
-      });
-      if (existing) {
-        throw new ConflictException('Celestial object with this name already exists');
-      }
-
-      const celestialObject = new CelestialObject();
-      celestialObject.globalName = createNebulaDto.globalName;
-      celestialObject.description = createNebulaDto.description;
-      celestialObject.imageUrl = createNebulaDto.imageUrl;
-      const savedCelestialObject = await queryRunner.manager.save(celestialObject);
-
-      const nebula = new Nebula();
-      nebula.id = savedCelestialObject.id;
-      nebula.neighborhoodId = createNebulaDto.neighborhoodId;
-      nebula.celestialObject = savedCelestialObject;
-
-      const savedNebula = await queryRunner.manager.save(Nebula, nebula);
-      await queryRunner.commitTransaction();
-      return savedNebula;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
+  async create(createNebulaDto: CreateNebulaDto): Promise<Nebula> {
+    const existing = await this.nebulaModel.findOne({ globalName: createNebulaDto.globalName });
+    if (existing) {
+      throw new ConflictException('Nebula with this name already exists');
     }
+
+    const createdNebula = new this.nebulaModel(createNebulaDto);
+    return createdNebula.save();
   }
 
-  findAll(): Promise<Nebula[]> {
-    return this.nebulaRepository.find();
+  async findAll(): Promise<Nebula[]> {
+    return this.nebulaModel.find().exec();
   }
 
-  async findOne(id: number): Promise<Nebula> {
-    const nebula = await this.nebulaRepository.findOne({ where: { id } });
+  async findOne(id: number | string): Promise<Nebula> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format`);
+    }
+
+    const nebula = await this.nebulaModel.findById(id).exec();
     if (!nebula) {
       throw new NotFoundException(`Nebula with ID ${id} not found`);
     }
     return nebula;
+  }
+
+  async update(id: string, updateNebulaDto: any): Promise<Nebula> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format`);
+    }
+
+    const updatedNebula = await this.nebulaModel.findByIdAndUpdate(id, updateNebulaDto, { new: true }).exec();
+    if (!updatedNebula) {
+      throw new NotFoundException(`Nebula with ID ${id} not found`);
+    }
+    return updatedNebula;
+  }
+
+  async remove(id: string): Promise<void> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException(`Invalid ID format`);
+    }
+
+    const result = await this.nebulaModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new NotFoundException(`Nebula with ID ${id} not found`);
+    }
   }
 }

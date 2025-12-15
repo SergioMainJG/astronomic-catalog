@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { NebulasService } from './nebulas.service';
 import { NebulasController } from './nebulas.controller';
-import { Nebula } from './entities/nebula.entity';
-import { CelestialObject } from '../shared/entities/celestial-object.entity';
+import { Nebula, NebulaSchema } from './schemas/nebula.schema';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Nebula, CelestialObject])],
+  imports: [MongooseModule.forFeature([{ name: Nebula.name, schema: NebulaSchema }])],
   controllers: [NebulasController],
   providers: [NebulasService],
 })
