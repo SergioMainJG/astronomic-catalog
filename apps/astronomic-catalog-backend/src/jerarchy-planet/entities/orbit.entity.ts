@@ -21,7 +21,6 @@ export class Orbit {
   @Column({ name: 'orbital_period', type: 'decimal', precision: 10, scale: 4 })
   orbitalPeriod: number;
 
-  // Relations
   @ManyToOne(() => CelestialObject)
   @JoinColumn({ name: 'celestial_object_id' })
   celestialObject: CelestialObject;

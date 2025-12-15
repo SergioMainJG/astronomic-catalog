@@ -9,13 +9,12 @@ export class BlackholesService {
   constructor(
     @InjectRepository(BlackHole)
     private blackHoleRepository: Repository<BlackHole>,
-    @InjectRepository(CelestialObject) // We might need this repo for direct updates if needed, but cascade should handle creation
+    @InjectRepository(CelestialObject)
     private celestialObjectRepository: Repository<CelestialObject>,
     private dataSource: DataSource,
   ) { }
 
   async create(createBlackHoleDto: any): Promise<BlackHole> {
-    // Transactional creation to ensure consistency
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -67,12 +66,10 @@ export class BlackholesService {
   async update(id: number, updateBlackHoleDto: any): Promise<BlackHole> {
     const blackHole = await this.findOne(id);
 
-    // Update base properties
     if (updateBlackHoleDto.globalName) blackHole.celestialObject.globalName = updateBlackHoleDto.globalName;
     if (updateBlackHoleDto.description) blackHole.celestialObject.description = updateBlackHoleDto.description;
     if (updateBlackHoleDto.imageUrl) blackHole.celestialObject.imageUrl = updateBlackHoleDto.imageUrl;
 
-    // Update specific properties
     if (updateBlackHoleDto.massSolar) blackHole.massSolar = updateBlackHoleDto.massSolar;
 
     await this.celestialObjectRepository.save(blackHole.celestialObject);
@@ -81,14 +78,7 @@ export class BlackholesService {
 
   async remove(id: number): Promise<void> {
     const blackHole = await this.findOne(id);
-    // Because of foreign key constraints and cascade (if configured in DB), deleting parent might be enough, 
-    // but here we hold the child. Deleting the base object is usually cleaner if cascade delete is set in DB.
-    // In our entity we set onDelete: 'CASCADE' for the OneToOne, so deleting the BlackHole entity might not delete the CelestialObject? 
-    // Wait, the FK is on BlackHole(id) -> CelestialObject(id).
-    // If we delete CelestialObject, BlackHole should go.
-    // If we delete BlackHole, CelestialObject stays? That's weird for a "subtype".
-    // We should delete the CelestialObject.
-
+    
     await this.celestialObjectRepository.remove(blackHole.celestialObject);
   }
 }

@@ -29,7 +29,7 @@ import { ViewEntity, ViewColumn, PrimaryColumn } from 'typeorm';
              LEFT JOIN Asteroid a ON a.id = c.id
              LEFT JOIN Comet co ON co.id = c.id
              LEFT JOIN StarCluster sc ON sc.id = c.id
-  ` // Providing the expression is good practice for TypeORM to sync, though we assume DB manages it.
+  `
 })
 export class CelestialObjectWithType {
   @PrimaryColumn()
