@@ -1,0 +1,52 @@
+
+import Layout from '../layouts/Layout.astro';
+import type { BlackHole } from '../types';
+
+let blackholes: BlackHole[] = [];
+try {
+  const response = await fetch('http://localhost:3000/blackholes');
+  if (response.ok) {
+    blackholes = await response.json();
+  }
+} catch (e) {
+  console.error('Failed to fetch blackholes', e);
+}
+---
+
+<Layout title="Astronomic Catalog - Black Holes">
+	<div class="space-y-8">
+		<header>
+			<h1 class="text-3xl font-bold text-white">Black Holes</h1>
+			<p class="text-slate-400">Singularities of infinite density.</p>
+		</header>
+
+		<div class="overflow-x-auto bg-slate-800 rounded-lg shadow border border-slate-700">
+			<table class="w-full text-left text-sm text-slate-300">
+				<thead class="bg-slate-900 text-xs uppercase text-slate-400">
+					<tr>
+						<th class="px-6 py-4">Name</th>
+						<th class="px-6 py-4">Mass (Solar Masses)</th>
+						<th class="px-6 py-4">Description</th>
+                        <th class="px-6 py-4">Image</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-slate-700">
+					{blackholes.map((bh) => (
+						<tr class="hover:bg-slate-700/50">
+							<td class="px-6 py-4 font-medium text-white">
+                                {bh.celestialObject?.globalName || 'N/A'}
+                            </td>
+							<td class="px-6 py-4">{bh.massSolar}</td>
+							<td class="px-6 py-4 max-w-md truncate">{bh.celestialObject?.description || 'N/A'}</td>
+                            <td class="px-6 py-4">
+                                {bh.celestialObject?.imageUrl && (
+                                    <img src={bh.celestialObject.imageUrl} alt="Blackhole" class="w-12 h-12 rounded object-cover" />
+                                )}
+                            </td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</Layout>
