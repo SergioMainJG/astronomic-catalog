@@ -2,9 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import type { Galaxy } from "../types";
 
+const API_URL = import.meta.env.API_BACKEND || "http://localhost:3000";
+
 let galaxies: Galaxy[] = [];
 try {
-	const response = await fetch("http://localhost:3000/galaxies");
+	const response = await fetch(`${API_URL}/galaxies`);
 	if (response.ok) {
 		galaxies = await response.json();
 	}

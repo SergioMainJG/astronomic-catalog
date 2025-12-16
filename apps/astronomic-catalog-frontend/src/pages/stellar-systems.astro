@@ -2,9 +2,11 @@
 import Layout from "../layouts/Layout.astro";
 import type { StarSystem } from "../types";
 
+const API_URL = import.meta.env.API_BACKEND || "http://localhost:3000";
+
 let systems: StarSystem[] = [];
 try {
-	const response = await fetch("http://localhost:3000/stellar-systems");
+	const response = await fetch(`${API_URL}/stellar-systems`);
 	if (response.ok) {
 		systems = await response.json();
 	}

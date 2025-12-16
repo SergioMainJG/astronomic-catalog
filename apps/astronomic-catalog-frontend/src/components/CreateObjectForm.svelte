@@ -2,7 +2,7 @@
   import CloudinaryUpload from "./CloudinaryUpload.svelte";
 
   // Allow any props to avoid TS errors
-  let { ..._props } = $props();
+  let { apiUrl = "http://localhost:3000", ..._props } = $props();
 
   let objectType = $state("blackhole");
 
@@ -22,7 +22,7 @@
     isError = false;
 
     // Black Hole Payload
-    const url = "http://localhost:3000/blackholes";
+    const url = `${apiUrl}/blackholes`;
     const payload = {
       globalName: form.globalName,
       description: form.description,
