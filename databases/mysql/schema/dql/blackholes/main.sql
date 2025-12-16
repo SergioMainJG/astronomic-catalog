@@ -1,8 +1,6 @@
 SELECT a.`global_name` AS `name`,
        a.`description` AS `description`,
        a.`image_url`   AS `image`,
-       a.`created_at`  AS `added at`,
-       a.`updated_at`  AS `last update`,
        b.`mass_solar`  AS `mass (relative to solar mass)`
 FROM `CelestialObject` a
          INNER JOIN BlackHole b

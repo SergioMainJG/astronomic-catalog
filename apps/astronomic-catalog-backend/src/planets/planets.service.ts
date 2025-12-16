@@ -52,11 +52,11 @@ export class PlanetsService {
   }
 
   findAll(): Promise<Planet[]> {
-    return this.planetRepository.find();
+    return this.planetRepository.find({ relations: ['celestialObject'] });
   }
 
   async findOne(id: number): Promise<Planet> {
-    const planet = await this.planetRepository.findOne({ where: { id } });
+    const planet = await this.planetRepository.findOne({ where: { id }, relations: ['celestialObject'] });
     if (!planet) {
       throw new NotFoundException(`Planet with ID ${id} not found`);
     }

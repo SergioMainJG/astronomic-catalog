@@ -4,7 +4,8 @@ interface Props {
 }
 
 const { title } = Astro.props;
-import '../styles/global.css';
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -16,6 +17,7 @@ import '../styles/global.css';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<ClientRouter />
 	</head>
 	<body class="bg-slate-900 text-slate-100 min-h-screen">
 		<nav class="bg-slate-800 border-b border-slate-700 shadow-lg">
@@ -23,15 +25,36 @@ import '../styles/global.css';
 				<div class="flex items-center justify-between h-16">
 					<div class="flex items-center">
 						<div class="flex-shrink-0">
-							<a href="/" class="text-xl font-bold text-sky-400">AstroCatalog</a>
+							<a href="/" class="text-xl font-bold text-sky-400">AstroCatalog</a
+							>
 						</div>
 						<div class="hidden md:block">
 							<div class="ml-10 flex items-baseline space-x-4">
-								<a href="/" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-								<a href="/blackholes" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Black Holes</a>
-								<a href="/galaxies" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Galaxies</a>
-								<a href="/stellar-systems" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Stellar Systems</a>
-								<a href="/jerarchy-planet" class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium">Orbits</a>
+								<a
+									href="/"
+									class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium"
+									>Home</a
+								>
+								<a
+									href="/blackholes"
+									class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium"
+									>Black Holes</a
+								>
+								<a
+									href="/galaxies"
+									class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium"
+									>Galaxies</a
+								>
+								<a
+									href="/stellar-systems"
+									class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium"
+									>Stellar Systems</a
+								>
+								<a
+									href="/jerarchy-planet"
+									class="hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-medium"
+									>Orbits</a
+								>
 							</div>
 						</div>
 					</div>

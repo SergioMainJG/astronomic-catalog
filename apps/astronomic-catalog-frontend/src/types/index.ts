@@ -43,12 +43,16 @@ export interface StarSystem {
 
 export interface Orbit {
   id: number;
-  celestialObject: {
-    globalName: string;
-  };
+  celestialObject: CelestialObject;
   primaryBody: {
     globalName: string;
   };
   semiMajorAxis: number;
-  // Mapped for DQL: StarName, PlanetName, DistanceAU
+}
+
+export interface Planet {
+  id: number;
+  celestialObject: CelestialObject;
+  radiusEarth: number;
+  massEarth: number;
 }
