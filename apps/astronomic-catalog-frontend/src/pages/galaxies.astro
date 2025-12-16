@@ -1,15 +1,15 @@
-
-import Layout from '../layouts/Layout.astro';
-import type { Galaxy } from '../types';
+---
+import Layout from "../layouts/Layout.astro";
+import type { Galaxy } from "../types";
 
 let galaxies: Galaxy[] = [];
 try {
-  const response = await fetch('http://localhost:3000/galaxies');
-  if (response.ok) {
-    galaxies = await response.json();
-  }
+	const response = await fetch("http://localhost:3000/galaxies");
+	if (response.ok) {
+		galaxies = await response.json();
+	}
 } catch (e) {
-  console.error('Failed to fetch galaxies', e);
+	console.error("Failed to fetch galaxies", e);
 }
 ---
 
@@ -21,23 +21,33 @@ try {
 		</header>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{galaxies.map((galaxy) => (
-				<article class="relative group bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-purple-500 transition-all">
-					<div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl opacity-0 group-hover:opacity-25 transition duration-500 blur"></div>
-					<div class="relative">
-                        {galaxy.celestialObject?.imageUrl && (
-                             <img src={galaxy.celestialObject.imageUrl} alt={galaxy.celestialObject.globalName} class="w-full h-40 object-cover rounded-lg mb-4" />
-                        )}
-						<h2 class="text-xl font-bold text-white mb-2">{galaxy.celestialObject?.globalName || 'Unknown Galaxy'}</h2>
-						<div class="flex items-center space-x-2 text-sm text-slate-400 mb-4">
-							<span class="bg-slate-700 px-2 py-0.5 rounded text-white">{galaxy.galaxyType}</span>
+			{
+				galaxies.map((galaxy) => (
+					<article class="relative group bg-slate-800 rounded-xl p-4 border border-slate-700 hover:border-purple-500 transition-all">
+						<div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl opacity-0 group-hover:opacity-25 transition duration-500 blur" />
+						<div class="relative">
+							{galaxy.celestialObject?.imageUrl && (
+								<img
+									src={galaxy.celestialObject.imageUrl}
+									alt={galaxy.celestialObject.globalName}
+									class="w-full h-40 object-cover rounded-lg mb-4"
+								/>
+							)}
+							<h2 class="text-xl font-bold text-white mb-2">
+								{galaxy.celestialObject?.globalName || "Unknown Galaxy"}
+							</h2>
+							<div class="flex items-center space-x-2 text-sm text-slate-400 mb-4">
+								<span class="bg-slate-700 px-2 py-0.5 rounded text-white">
+									{galaxy.galaxyType}
+								</span>
+							</div>
+							<p class="text-slate-300 text-sm line-clamp-3">
+								{galaxy.celestialObject?.description}
+							</p>
 						</div>
-						<p class="text-slate-300 text-sm line-clamp-3">
-							{galaxy.celestialObject?.description}
-						</p>
-					</div>
-				</article>
-			))}
+					</article>
+				))
+			}
 		</div>
 	</div>
 </Layout>

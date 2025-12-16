@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { CelestialObject } from '../../shared/entities/celestial-object.entity';
+import { StarSystem } from '../../stellar-systems/entities/star-system.entity';
 
 @Entity('Star')
 export class Star {
@@ -24,4 +25,8 @@ export class Star {
   @OneToOne(() => CelestialObject, { cascade: true, eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'id' })
   celestialObject: CelestialObject;
+
+  @ManyToOne(() => StarSystem, (system) => system.stars)
+  @JoinColumn({ name: 'system_id' })
+  starSystem: StarSystem;
 }

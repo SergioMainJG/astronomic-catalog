@@ -49,4 +49,6 @@ echo "Seed startup - data Sembrando datos iniciales..."
 load_sql "/docker-entrypoint-initdb.d/seed/startup.sql"
 
 echo "Loading completed of seed - Carga completa de la seed"
+echo "Creating views - Creando vistas"
+load_sql "/docker-entrypoint-initdb.d/views/celestial-object-type.sql"
 echo "Database ready - Base de datos lista"

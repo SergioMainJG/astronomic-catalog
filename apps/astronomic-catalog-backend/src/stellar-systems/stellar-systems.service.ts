@@ -20,14 +20,15 @@ export class StellarSystemsService {
   }
 
   findAll(): Promise<StarSystem[]> {
-    return this.starSystemRepository.find();
+    return this.starSystemRepository.find({ relations: ['neighborhood', 'stars'] });
   }
 
   async findOne(id: number): Promise<StarSystem> {
-    const starSystem = await this.starSystemRepository.findOne({ where: { id } });
+    const starSystem = await this.starSystemRepository.findOne({ where: { id }, relations: ['neighborhood', 'stars'] });
     if (!starSystem) {
       throw new NotFoundException(`StarSystem with ID ${id} not found`);
     }
+    console.log({ starSystem });
     return starSystem;
   }
 
