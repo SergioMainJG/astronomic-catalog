@@ -47,6 +47,7 @@ services:
     build:
       context: ../../apps/astronomic-catalog-backend
       dockerfile: Dockerfile
+      target: builder
     ports:
       - "3000:3000"
     environment:
@@ -57,6 +58,10 @@ services:
       MYSQL_DATABASE: astronomic-catalog-db
       MONGODB_URL: mongodb://sergio:hola@astronomic_mongodb:27017/astronomic-catalog-mongo?authSource=admin
       PORT: 3000
+    volumes:
+      - ../../apps/astronomic-catalog-backend:/app
+      - /app/node_modules
+    command: pnpm run start:dev
     networks:
       - astronomic_net
     depends_on:
