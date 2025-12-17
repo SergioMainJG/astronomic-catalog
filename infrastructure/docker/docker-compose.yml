@@ -1,0 +1,149 @@
+services:
+  astronomic_mysql:
+    container_name: astronomic_mysql
+    image: mysql:latest
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: astronomic-catalog-db
+      MYSQL_ROOT_PASSWORD: Hola
+      MYSQL_USER: sergioar
+      MYSQL_PASSWORD: hola
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ../../databases/mysql/schema:/docker-entrypoint-initdb.d
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.ini
+    networks:
+      - astronomic_net
+    healthcheck:
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pHola"]
+      timeout: 20s
+      retries: 10
+
+  astronomic_mongodb:
+    container_name: astronomic_mongodb
+    image: mongo:latest
+    restart: always
+    ports:
+      - 3307:27017
+    environment:
+      MONGO_INITDB_DATABASE: astronomic-catalog-mongo
+      MONGO_INITDB_ROOT_USERNAME: sergio
+      MONGO_INITDB_ROOT_PASSWORD: hola
+    volumes:
+      - ./mongo_data:/data/db
+    networks:
+      - astronomic_net
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  astronomic_backend:
+    container_name: astronomic_backend
+    build:
+      context: ../../apps/astronomic-catalog-backend
+      dockerfile: Dockerfile
+      target: builder
+    ports:
+      - "3000:3000"
+    environment:
+      GLOBAL_HOST: astronomic_mysql
+      MYSQL_PORT: 3306
+      MYSQL_NEST_USER: nest_app
+      MYSQL_NEST_PASS: nest_password_123
+      MYSQL_DATABASE: astronomic-catalog-db
+      MONGODB_URL: mongodb://sergio:hola@astronomic_mongodb:27017/astronomic-catalog-mongo?authSource=admin
+      PORT: 3000
+    volumes:
+      - ../../apps/astronomic-catalog-backend:/app
+      - /app/node_modules
+    command: pnpm run start:dev
+    networks:
+      - astronomic_net
+    depends_on:
+      astronomic_mysql:
+        condition: service_healthy
+      astronomic_mongodb:
+        condition: service_healthy
+
+  astronomic_frontend:
+    container_name: astronomic_frontend
+    build:
+      context: ../../apps/astronomic-catalog-frontend
+      dockerfile: Dockerfile
+      args:
+        PUBLIC_CLOUDINARY_CLOUD_NAME: ${PUBLIC_CLOUDINARY_CLOUD_NAME}
+        PUBLIC_CLOUDINARY_UPLOAD_PRESET: ${PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+    ports:
+      - "4321:4321"
+    environment:
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+      INTERNAL_API_URL: http://astronomic_backend:3000
+      API_BACKEND: http://astronomic_backend:3000
+      PUBLIC_CLOUDINARY_CLOUD_NAME: ${PUBLIC_CLOUDINARY_CLOUD_NAME}
+      PUBLIC_CLOUDINARY_UPLOAD_PRESET: ${PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+      HOST: 0.0.0.0
+    depends_on:
+      - astronomic_backend
+    networks:
+      - astronomic_net
+
+  mysql_exporter:
+    image: prom/mysqld-exporter:v0.14.0
+    container_name: astronomic_mysql_exporter
+    environment:
+      DATA_SOURCE_NAME: root:Hola@(astronomic_mysql:3306)/
+    depends_on:
+      astronomic_mysql:
+        condition: service_healthy
+    networks:
+      - astronomic_net
+
+  mongo_exporter:
+    image: percona/mongodb_exporter:0.40
+    container_name: astronomic_mongo_exporter
+    command: --mongodb.uri=mongodb://sergio:hola@astronomic_mongodb:27017
+    depends_on:
+      astronomic_mongodb:
+        condition: service_healthy
+    networks:
+      - astronomic_net
+
+  prometheus:
+    image: prom/prometheus
+    container_name: astronomic_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "3003:9090"
+    depends_on:
+      - mysql_exporter
+      - mongo_exporter
+    networks:
+      - astronomic_net
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana
+    container_name: astronomic_grafana
+    ports:
+      - "3002:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - astronomic_net
+    depends_on:
+      prometheus:
+        condition: service_healthy
+
+networks:
+  astronomic_net:
+    driver: bridge

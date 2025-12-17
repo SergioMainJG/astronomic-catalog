@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CreateObjectForm from "../components/CreateObjectForm.svelte";
+
+// const API_URL = import.meta.env.INTERNAL_API_URL || "http://localhost:3000";
+const API_URL = import.meta.env.PUBLIC_API_URL || "http://localhost:3000";
+---
+
+<Layout title="Astronomic Catalog - Add Object">
+  <div class="max-w-2xl mx-auto py-8">
+    <CreateObjectForm client:load apiUrl={API_URL} />
+  </div>
+</Layout>
